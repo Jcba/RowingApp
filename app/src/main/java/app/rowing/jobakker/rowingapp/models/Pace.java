@@ -1,11 +1,8 @@
-package app.rowing.jobakker.rowingapp;
+package app.rowing.jobakker.rowingapp.models;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by JOBAKKER on 30-6-2015.
- */
 public class Pace extends Date {
     private SimpleDateFormat paceformat;
 

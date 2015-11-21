@@ -1,26 +1,24 @@
-package app.rowing.jobakker.rowingapp;
+package app.rowing.jobakker.rowingapp.views;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import app.rowing.jobakker.rowingapp.R;
+import app.rowing.jobakker.rowingapp.api.sensors.HeartrateSensor;
+import app.rowing.jobakker.rowingapp.api.sensors.PaceSensor;
+import app.rowing.jobakker.rowingapp.api.sensors.StrokerateSensor;
+import app.rowing.jobakker.rowingapp.models.Pace;
 
-import static java.lang.System.currentTimeMillis;
-
-/**
- * Created by JOBAKKER on 29-6-2015.
- */
 public class MainFragment extends Fragment implements StrokerateSensor, HeartrateSensor, PaceSensor {
     private TextView heartrate;
     private TextView strokerate;
     private TextView pace;
     private TextView avepace;
-    private List<Long> laststrokes;
 
     /**
      * The fragment argument representing the section number for this
@@ -41,7 +39,7 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
     }
 
     public MainFragment() {
-        laststrokes = new ArrayList<Long>();
+
     }
 
     @Override
@@ -52,29 +50,24 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
         this.avepace = (TextView) rootView.findViewById(R.id.avepace);
         this.pace = (TextView) rootView.findViewById(R.id.pace);
         this.strokerate = (TextView) rootView.findViewById(R.id.strokerate);
+        Log.v("MainFragment", "fragment created");
         return rootView;
     }
 
     @Override
-    public void stroke() {
-        laststrokes.add(currentTimeMillis());
-
-        if (laststrokes.size() > 10) {
-            laststrokes.remove(0);
-        }
-
-        long delta = (laststrokes.get(laststrokes.size()) - laststrokes.get(0)) / laststrokes.size();
-
-        strokerate.setText(String.format("%.d", 60000 / delta));
+    public void stroke(final int strokerate) {
+        Log.v("MainFragment", "stroke event received");
+        this.strokerate.setText(String.format("%d", strokerate));
     }
 
     @Override
-    public void heartbeat() {
-
+    public void heartbeat(final int heartbeat) {
+        Log.v("MainFragment", "heartbeat event received");
     }
 
     @Override
     public void newSpeed(Pace speed) {
+        Log.v("MainFragment", "speed event received");
         this.pace.setText(speed.getPace());
         this.avepace.setText(speed.getPace());
     }

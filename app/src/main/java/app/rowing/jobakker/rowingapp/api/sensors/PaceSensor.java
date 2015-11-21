@@ -1,8 +1,7 @@
-package app.rowing.jobakker.rowingapp;
+package app.rowing.jobakker.rowingapp.api.sensors;
 
-/**
- * Created by JOBAKKER on 30-6-2015.
- */
+import app.rowing.jobakker.rowingapp.models.Pace;
+
 public interface PaceSensor {
     /**
      * Called when a change in speed has been detected

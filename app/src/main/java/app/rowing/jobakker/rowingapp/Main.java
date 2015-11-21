@@ -3,16 +3,23 @@ package app.rowing.jobakker.rowingapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Locale;
 
+import app.rowing.jobakker.rowingapp.views.MainFragment;
+import app.rowing.jobakker.rowingapp.views.MapsFragment;
+
 
 public class Main extends Activity {
+    private final static int NUMBER_OF_FRAGMENTS = 3;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -22,12 +29,12 @@ public class Main extends Activity {
      * may be best to switch to a
      * {@link android.support.v13.app.FragmentStatePagerAdapter}.
      */
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
 
     private SensorService sensorService;
 
@@ -43,9 +50,18 @@ public class Main extends Activity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        sensorService = new SensorService();
+
+        final SensorManager sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        sensorService = new SensorService(sensorManager);
+
+        sensorService.onResume();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sensorService.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,19 +98,29 @@ public class Main extends Activity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            MainFragment mainFragment = MainFragment.newInstance(position + 1);
-            sensorService.addHeartrateListener(mainFragment);
-            sensorService.addPaceListener(mainFragment);
-            sensorService.addStrokerateListener(mainFragment);
-            return mainFragment;
+            switch(position){
+                case 0:
+                    final MainFragment mainFragment = MainFragment.newInstance(position+1);
+                    sensorService.addHeartrateListener(mainFragment);
+                    sensorService.addPaceListener(mainFragment);
+                    sensorService.addStrokerateListener(mainFragment);
+                    return mainFragment;
+                case 1:
+                    final MapsFragment mapsFragment = MapsFragment.newInstance(position+1);
+                    return mapsFragment;
+                case 2:
+                    final MainFragment mainFragment3 = MainFragment.newInstance(position+1);
+                    sensorService.addPaceListener(mainFragment3);
+                    return mainFragment3;
+                default:
+                    Log.e("Main", "unable to determine fragment to use");
+                    return null;
+            }
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return NUMBER_OF_FRAGMENTS;
         }
 
         @Override
