@@ -8,18 +8,24 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import app.rowing.jobakker.rowingapp.LocationService;
+import app.rowing.jobakker.rowingapp.LocationServiceImpl;
 import app.rowing.jobakker.rowingapp.R;
 
 public class MapsFragment extends Fragment {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private MapView mMapView;
+    private LocationService locationService;
+
+    public MapsFragment() {
+        locationService = LocationServiceImpl.getInstance();
+    }
 
     /**
      * The fragment argument representing the section number for this
@@ -64,15 +70,11 @@ public class MapsFragment extends Fragment {
         return rootView;
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
     private void setUpMap() {
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        locationService.getAllCurrentLocationData();
     }
 }

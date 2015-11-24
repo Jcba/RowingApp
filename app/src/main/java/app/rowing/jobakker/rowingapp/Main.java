@@ -3,7 +3,6 @@ package app.rowing.jobakker.rowingapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -52,7 +51,7 @@ public class Main extends Activity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         final SensorManager sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        sensorService = new SensorService(sensorManager);
+        sensorService = new SensorServiceImpl(sensorManager);
 
         sensorService.onResume();
     }
