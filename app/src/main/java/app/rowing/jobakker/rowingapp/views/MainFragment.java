@@ -3,21 +3,30 @@ package app.rowing.jobakker.rowingapp.views;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import app.rowing.jobakker.rowingapp.R;
+import app.rowing.jobakker.rowingapp.models.Pace;
 import app.rowing.jobakker.rowingapp.sensors.api.HeartrateSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.PaceSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.StrokerateSensor;
-import app.rowing.jobakker.rowingapp.models.Pace;
 
+@EFragment(R.layout.fragment_main)
 public class MainFragment extends Fragment implements StrokerateSensor, HeartrateSensor, PaceSensor {
+
+    @ViewById
     private TextView heartrate;
+
+    @ViewById
     private TextView strokerate;
+
+    @ViewById
     private TextView pace;
+
+    @ViewById
     private TextView avepace;
 
     /**
@@ -39,19 +48,6 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
     }
 
     public MainFragment() {
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        this.heartrate = (TextView) rootView.findViewById(R.id.heartrate);
-        this.avepace = (TextView) rootView.findViewById(R.id.avepace);
-        this.pace = (TextView) rootView.findViewById(R.id.pace);
-        this.strokerate = (TextView) rootView.findViewById(R.id.strokerate);
-        Log.v("MainFragment", "fragment created");
-        return rootView;
     }
 
     @Override

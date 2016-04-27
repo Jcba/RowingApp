@@ -4,6 +4,8 @@ import android.app.Fragment;
 
 import org.androidannotations.annotations.EFragment;
 
-@EFragment
-public class GraphFragment{
+import app.rowing.jobakker.rowingapp.R;
+
+@EFragment(R.layout.fragment_graph)
+public class GraphFragment {
 }

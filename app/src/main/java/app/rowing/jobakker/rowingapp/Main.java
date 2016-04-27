@@ -18,6 +18,7 @@ import app.rowing.jobakker.rowingapp.views.MapsFragment;
 
 
 public class Main extends Activity {
+
     private final static int NUMBER_OF_FRAGMENTS = 3;
 
     /**
