@@ -1,8 +1,8 @@
 package app.rowing.jobakker.rowingapp;
 
-import app.rowing.jobakker.rowingapp.api.sensors.HeartrateSensor;
-import app.rowing.jobakker.rowingapp.api.sensors.PaceSensor;
-import app.rowing.jobakker.rowingapp.api.sensors.StrokerateSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.HeartrateSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.PaceSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.StrokerateSensor;
 
 public interface SensorService {
 

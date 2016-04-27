@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import app.rowing.jobakker.rowingapp.R;
-import app.rowing.jobakker.rowingapp.api.sensors.HeartrateSensor;
-import app.rowing.jobakker.rowingapp.api.sensors.PaceSensor;
-import app.rowing.jobakker.rowingapp.api.sensors.StrokerateSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.HeartrateSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.PaceSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.StrokerateSensor;
 import app.rowing.jobakker.rowingapp.models.Pace;
 
 public class MainFragment extends Fragment implements StrokerateSensor, HeartrateSensor, PaceSensor {

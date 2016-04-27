@@ -1,6 +1,6 @@
-package app.rowing.jobakker.rowingapp.api.sensors;
+package app.rowing.jobakker.rowingapp.sensors.api;
 
-public interface HeartrateSensor {
+public interface HeartrateSensor extends Sensor {
     /**
      * Called when a heartbeat is detected
      *

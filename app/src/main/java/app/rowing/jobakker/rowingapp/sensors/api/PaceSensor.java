@@ -1,8 +1,8 @@
-package app.rowing.jobakker.rowingapp.api.sensors;
+package app.rowing.jobakker.rowingapp.sensors.api;
 
 import app.rowing.jobakker.rowingapp.models.Pace;
 
-public interface PaceSensor {
+public interface PaceSensor extends Sensor{
     /**
      * Called when a change in speed has been detected
      *
