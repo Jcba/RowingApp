@@ -16,7 +16,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.androidannotations.annotations.EFragment;
 
 import app.rowing.jobakker.rowingapp.LocationService;
-import app.rowing.jobakker.rowingapp.LocationServiceImpl;
 import app.rowing.jobakker.rowingapp.R;
 
 @EFragment

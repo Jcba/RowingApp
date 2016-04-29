@@ -1,21 +1,23 @@
 package app.rowing.jobakker.rowingapp.sensors.impl;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
 
-public class PaceSensorService {
+public class PaceSensorServiceImpl {
     private final List<Long> laststrokes;
     private final FixedSizeContainer<SensorValue> sensorValues;
 
-    public PaceSensorService() {
+    public PaceSensorServiceImpl() {
         laststrokes = new ArrayList<Long>();
         sensorValues = new FixedSizeContainer<>();
     }
 
     //do things with these listeners (update them for instance)
-    public int onSensorChanged(float x, float y, float z) {
+    public int addSensorValueAndDetermineStrokeRate(float x, float y, float z) {
         sensorValues.add(new SensorValue(x, y, z));
 
         if (sensorValues.lastIsPeak())
@@ -87,7 +89,7 @@ public class PaceSensorService {
         }
 
         public void add(T element) {
-            if (head >= maxNumberOfValues) {
+            if (head+1 >= maxNumberOfValues) {
                 head = 0;
                 values[head] = element;
             }
@@ -105,16 +107,29 @@ public class PaceSensorService {
         public List<T> getMaximums() {
             List<T> result = new ArrayList<T>();
 
-            float last = ((T) values[0]).getXyz();
+            T valueLast = ((T) values[0]);
+            if(valueLast == null) {
+                return result;
+            }
+
+            float last = valueLast.getXyz();
+
             for (int i = 0; i < maxNumberOfValues; i++) {
                 T value = (T) values[(i + head) % maxNumberOfValues];
                 T next = (T) values[(i + head + 1) % maxNumberOfValues];
+
+                if(value == null && next == null) {
+                    continue;
+                }
+
                 if (value.getXyz() > last && value.getXyz() > next.getXyz()) {
                     result.add(value);
                 }
 
                 last = value.getXyz();
             }
+
+            Log.v("PaceSensorServiceImpl", "calculated peaks"+result.toString());
             return result;
         }
 
@@ -126,13 +141,18 @@ public class PaceSensorService {
             }
             mean = mean / maximums.size();
 
-            SensorValue twoAgo = (T) values[(head - 2) % maxNumberOfValues];
-            SensorValue last = (T) values[(head - 1) % maxNumberOfValues];
-            SensorValue current = (T) values[(head) % maxNumberOfValues];
+            SensorValue twoAgo = (T) values[((head) % maxNumberOfValues)];
+            SensorValue last = (T) values[((head+1) % maxNumberOfValues)];
+            SensorValue current = (T) values[((head+2) % maxNumberOfValues)];
 
-            if (last.getXyz() > twoAgo.getXyz() && last.getXyz() > current.getXyz() && last.getXyz() > mean / 2) {
+            if(twoAgo == null || last == null || current == null) {
+                return false;
+            }
+
+            if (last.getXyz() > twoAgo.getXyz() && last.getXyz() > current.getXyz() && last.getXyz() > mean) {
                 return true;
             }
+
             return false;
         }
     }

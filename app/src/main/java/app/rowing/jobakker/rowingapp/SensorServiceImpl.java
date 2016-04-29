@@ -10,18 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.rowing.jobakker.rowingapp.sensors.api.HeartrateSensor;
-import app.rowing.jobakker.rowingapp.sensors.api.PaceSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.SpeedSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.StrokerateSensor;
-import app.rowing.jobakker.rowingapp.models.Pace;
-import app.rowing.jobakker.rowingapp.sensors.impl.PaceSensorService;
+import app.rowing.jobakker.rowingapp.sensors.impl.LocationServiceImpl;
+import app.rowing.jobakker.rowingapp.sensors.impl.PaceSensorServiceImpl;
 
 public class SensorServiceImpl implements SensorEventListener, SensorService {
     private final List<HeartrateSensor> heartrateListeners;
-    private final List<PaceSensor> paceListeners;
+    private final List<SpeedSensor> paceListeners;
     private final List<StrokerateSensor> strokerateListeners;
     private final SensorManager mSensorManager;
     private final Sensor mAccelerometer;
-    private final PaceSensorService paceSensorService;
+    private final PaceSensorServiceImpl paceSensorServiceImpl;
+    private final LocationServiceImpl locationService;
 
     SensorServiceImpl(final SensorManager sensorManager) {
         heartrateListeners = new ArrayList<>();
@@ -30,14 +31,15 @@ public class SensorServiceImpl implements SensorEventListener, SensorService {
 
         mSensorManager = sensorManager;
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        paceSensorService = new PaceSensorService();
+        paceSensorServiceImpl = new PaceSensorServiceImpl();
+        locationService = new LocationServiceImpl();
     }
 
     public void addHeartrateListener(HeartrateSensor listener) {
         this.heartrateListeners.add(listener);
     }
 
-    public void addPaceListener(PaceSensor listener) {
+    public void addPaceListener(SpeedSensor listener) {
         this.paceListeners.add(listener);
     }
 
@@ -45,20 +47,8 @@ public class SensorServiceImpl implements SensorEventListener, SensorService {
         this.strokerateListeners.add(listener);
     }
 
-    private void determineHeartBeat() {
-        for (final HeartrateSensor sensor : heartrateListeners) {
-            sensor.heartbeat(60);
-        }
-    }
-
-    private void determinePace(Pace pace) {
-        for (final PaceSensor sensor : paceListeners) {
-            sensor.newSpeed(pace);
-        }
-    }
-
     public void onResume() {
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void onDestroy() {
@@ -74,17 +64,33 @@ public class SensorServiceImpl implements SensorEventListener, SensorService {
             float y = event.values[1];
             float z = event.values[2];
 
-            final int strokerate = paceSensorService.onSensorChanged(x,y,z);
-            if(strokerate != -1) {
-                for (final StrokerateSensor sensor : strokerateListeners) {
-                    sensor.stroke(strokerate);
-                }
+            determineStrokeRate(x, y, z);
+        }
+    }
+
+    private void determineStrokeRate(float x, float y, float z) {
+        final int strokerate = paceSensorServiceImpl.addSensorValueAndDetermineStrokeRate(x,y,z);
+        if(strokerate != -1) {
+            for (final StrokerateSensor sensor : strokerateListeners) {
+                sensor.stroke(strokerate);
             }
+        }
+    }
+
+    private void determineHeartBeat() {
+        for (final HeartrateSensor sensor : heartrateListeners) {
+            sensor.heartbeat(60);
+        }
+    }
+
+    private void determineSpeed(float speed) {
+        for (final SpeedSensor sensor : paceListeners) {
+            sensor.newSpeed(speed);
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+        Log.d("SensorServiceImpl", "sensor accuracy changed, accuracy: " + accuracy);
     }
 }
