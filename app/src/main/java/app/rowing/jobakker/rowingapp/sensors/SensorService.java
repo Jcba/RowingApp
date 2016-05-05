@@ -1,6 +1,8 @@
-package app.rowing.jobakker.rowingapp;
+package app.rowing.jobakker.rowingapp.sensors;
 
+import app.rowing.jobakker.rowingapp.sensors.api.DistanceSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.HeartrateSensor;
+import app.rowing.jobakker.rowingapp.sensors.api.LocationSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.SpeedSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.StrokerateSensor;
 
@@ -11,6 +13,10 @@ public interface SensorService {
     void addPaceListener(SpeedSensor listener);
 
     void addStrokerateListener(StrokerateSensor listener);
+
+    void addDistanceSensorListener(DistanceSensor sensor);
+
+    void addLocationSensorListener(LocationSensor sensor);
 
     void onResume();
 

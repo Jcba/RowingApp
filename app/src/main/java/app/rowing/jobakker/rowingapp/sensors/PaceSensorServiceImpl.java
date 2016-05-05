@@ -1,4 +1,4 @@
-package app.rowing.jobakker.rowingapp.sensors.impl;
+package app.rowing.jobakker.rowingapp.sensors;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
 
-public class PaceSensorServiceImpl {
+public class PaceSensorServiceImpl implements PaceSensorService{
     private final List<Long> laststrokes;
     private final FixedSizeContainer<SensorValue> sensorValues;
 
@@ -16,7 +16,7 @@ public class PaceSensorServiceImpl {
         sensorValues = new FixedSizeContainer<>();
     }
 
-    //do things with these listeners (update them for instance)
+    @Override
     public int addSensorValueAndDetermineStrokeRate(float x, float y, float z) {
         sensorValues.add(new SensorValue(x, y, z));
 

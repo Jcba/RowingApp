@@ -8,13 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import app.rowing.jobakker.rowingapp.R;
-import app.rowing.jobakker.rowingapp.models.Pace;
+import app.rowing.jobakker.rowingapp.sensors.api.DistanceSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.HeartrateSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.SpeedSensor;
 import app.rowing.jobakker.rowingapp.sensors.api.StrokerateSensor;
 
-public class MainFragment extends Fragment implements StrokerateSensor, HeartrateSensor, SpeedSensor {
+public class MainFragment extends Fragment implements StrokerateSensor, HeartrateSensor, SpeedSensor, DistanceSensor {
 
     private TextView heartrate;
 
@@ -23,6 +25,8 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
     private TextView pace;
 
     private TextView avepace;
+
+    private TextView distance;
 
     public MainFragment() {
 
@@ -36,6 +40,7 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
         this.avepace = (TextView) rootView.findViewById(R.id.avepace);
         this.pace = (TextView) rootView.findViewById(R.id.pace);
         this.strokerate = (TextView) rootView.findViewById(R.id.strokerate);
+        this.distance = (TextView) rootView.findViewById(R.id.distance);
         Log.v("MainFragment", "fragment created");
         return rootView;
     }
@@ -61,7 +66,7 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
     @Override
     public void stroke(final int strokerate) {
         Log.v("MainFragment", "stroke event received");
-        this.strokerate.setText(String.format("%d", strokerate));
+        this.strokerate.setText(String.format(Locale.getDefault(), "%d", strokerate));
     }
 
     @Override
@@ -70,9 +75,14 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
     }
 
     @Override
-    public void newSpeed(Pace speed) {
+    public void newSpeed(float speed) {
         Log.v("MainFragment", "speed event received");
-        this.pace.setText(speed.getPace());
-        this.avepace.setText(speed.getPace());
+        this.pace.setText(String.format(Locale.getDefault(), "%.0f", speed));
+        this.avepace.setText(String.format(Locale.getDefault(), "%.0f", speed));
+    }
+
+    @Override
+    public void updatedDistance(float distance) {
+        this.distance.setText(String.format(Locale.getDefault(), "%.2f", distance));
     }
 }

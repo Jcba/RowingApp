@@ -1,6 +1,7 @@
 package app.rowing.jobakker.rowingapp.views;
 
 import android.app.Fragment;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +16,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.androidannotations.annotations.EFragment;
 
-import app.rowing.jobakker.rowingapp.LocationService;
 import app.rowing.jobakker.rowingapp.R;
+import app.rowing.jobakker.rowingapp.sensors.api.LocationSensor;
 
 @EFragment
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements LocationSensor {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private MapView mMapView;
-    private LocationService locationService;
 
     public MapsFragment() {
-        locationService = LocationServiceImpl.getInstance();
+
     }
 
     /**
@@ -74,9 +74,11 @@ public class MapsFragment extends Fragment {
 
     private void setUpMap() {
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
 
-        locationService.getAllCurrentLocationData();
+    @Override
+    public void updateLocation(Location location) {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())));
     }
 }

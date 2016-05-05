@@ -13,8 +13,10 @@ import android.view.MenuItem;
 
 import java.util.Locale;
 
-import app.rowing.jobakker.rowingapp.exceptions.FragmentNotFoundException;
-import app.rowing.jobakker.rowingapp.exceptions.TranslatableNotFoundException;
+import app.rowing.jobakker.rowingapp.exceptions.FragmentNotFoundRuntimeException;
+import app.rowing.jobakker.rowingapp.exceptions.TranslatableNotFoundRuntimeException;
+import app.rowing.jobakker.rowingapp.sensors.SensorService;
+import app.rowing.jobakker.rowingapp.sensors.SensorServiceImpl;
 import app.rowing.jobakker.rowingapp.views.GraphFragment;
 import app.rowing.jobakker.rowingapp.views.MainFragment;
 import app.rowing.jobakker.rowingapp.views.MapsFragment;
@@ -55,7 +57,7 @@ public class Main extends Activity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         final SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensorService = new SensorServiceImpl(sensorManager);
+        sensorService = new SensorServiceImpl(this, sensorManager);
 
         sensorService.onResume();
     }
@@ -107,16 +109,18 @@ public class Main extends Activity {
                     sensorService.addHeartrateListener(mainFragment);
                     sensorService.addPaceListener(mainFragment);
                     sensorService.addStrokerateListener(mainFragment);
+                    sensorService.addDistanceSensorListener(mainFragment);
                     return mainFragment;
                 case 1:
                     final MapsFragment mapsFragment = MapsFragment.newInstance(position + 1);
+                    sensorService.addLocationSensorListener(mapsFragment);
                     return mapsFragment;
                 case 2:
                     final GraphFragment graphFragment = GraphFragment.newInstance(position + 1);
                     return graphFragment;
                 default:
                     Log.e("Main", "unable to determine fragment to use");
-                    throw new FragmentNotFoundException("Unbale to determine fragment to use");
+                    throw new FragmentNotFoundRuntimeException("Unbale to determine fragment to use");
             }
         }
 
@@ -136,7 +140,7 @@ public class Main extends Activity {
                 case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
             }
-            throw new TranslatableNotFoundException(String.format("Could not find page title for locale %s", l.getCountry()));
+            throw new TranslatableNotFoundRuntimeException(String.format("Could not find page title for locale %s", l.getCountry()));
         }
     }
 }

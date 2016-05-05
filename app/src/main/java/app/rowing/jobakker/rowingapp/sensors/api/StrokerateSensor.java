@@ -1,6 +1,6 @@
 package app.rowing.jobakker.rowingapp.sensors.api;
 
-public interface StrokerateSensor extends Sensor{
+public interface StrokerateSensor extends Sensor {
     /**
      * Called when a stroke has been made
      *
