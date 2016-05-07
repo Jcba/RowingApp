@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import app.rowing.jobakker.rowingapp.exceptions.RowingAppRuntimeException;
 import app.rowing.jobakker.rowingapp.sensors.api.DistanceSensor;
@@ -61,7 +62,7 @@ public class SensorServiceImpl implements SensorEventListener, SensorService, Lo
         locationSensorListeners = new ArrayList<>();
 
         mSensorManager = sensorManager;
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         paceSensorServiceImpl = new PaceSensorServiceImpl();
         locationService = new LocationServiceImpl();
 
@@ -136,9 +137,25 @@ public class SensorServiceImpl implements SensorEventListener, SensorService, Lo
         this.locationSensorListeners.add(sensor);
     }
 
+    @Override
+    public void addSensor(app.rowing.jobakker.rowingapp.sensors.api.Sensor sensor) {
+        if(sensor instanceof DistanceSensor) {
+            addDistanceSensorListener((DistanceSensor) sensor);
+        }
+        if(sensor instanceof HeartrateSensor) {
+            addHeartrateListener((HeartrateSensor) sensor);
+        }
+        if(sensor instanceof SpeedSensor) {
+            addPaceListener((SpeedSensor) sensor);
+        }
+        if(sensor instanceof StrokerateSensor) {
+            addStrokerateListener((StrokerateSensor) sensor);
+        }
+    }
+
     public void onResume() {
         mGoogleApiClient.connect();
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     public void onDestroy() {
@@ -149,9 +166,7 @@ public class SensorServiceImpl implements SensorEventListener, SensorService, Lo
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.v("SensorServiceImpl", "sensor change received");
-
-        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];

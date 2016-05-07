@@ -109,7 +109,6 @@ public class Main extends Activity {
                     sensorService.addHeartrateListener(mainFragment);
                     sensorService.addPaceListener(mainFragment);
                     sensorService.addStrokerateListener(mainFragment);
-                    sensorService.addDistanceSensorListener(mainFragment);
                     return mainFragment;
                 case 1:
                     final MapsFragment mapsFragment = MapsFragment.newInstance(position + 1);
