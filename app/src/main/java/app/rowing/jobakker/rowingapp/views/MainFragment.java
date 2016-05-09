@@ -26,7 +26,7 @@ public class MainFragment extends Fragment implements StrokerateSensor, Heartrat
     private TextView avepace;
 
     public MainFragment() {
-
+        super();
     }
 
     @Override

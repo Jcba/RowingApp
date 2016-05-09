@@ -17,6 +17,7 @@ import app.rowing.jobakker.rowingapp.exceptions.FragmentNotFoundRuntimeException
 import app.rowing.jobakker.rowingapp.exceptions.TranslatableNotFoundRuntimeException;
 import app.rowing.jobakker.rowingapp.sensors.SensorService;
 import app.rowing.jobakker.rowingapp.sensors.SensorServiceImpl;
+import app.rowing.jobakker.rowingapp.views.CardMainFragment;
 import app.rowing.jobakker.rowingapp.views.GraphFragment;
 import app.rowing.jobakker.rowingapp.views.MainFragment;
 import app.rowing.jobakker.rowingapp.views.MapsFragment;
@@ -24,7 +25,7 @@ import app.rowing.jobakker.rowingapp.views.MapsFragment;
 
 public class Main extends Activity {
 
-    private final static int NUMBER_OF_FRAGMENTS = 3;
+    private final static int NUMBER_OF_FRAGMENTS = 4;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -105,11 +106,9 @@ public class Main extends Activity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    final MainFragment mainFragment = MainFragment.newInstance(position + 1);
-                    sensorService.addHeartrateListener(mainFragment);
-                    sensorService.addPaceListener(mainFragment);
-                    sensorService.addStrokerateListener(mainFragment);
-                    return mainFragment;
+                    final CardMainFragment cardMainFragment = CardMainFragment.newInstance(position + 1);
+                    sensorService.registerSensors(cardMainFragment);
+                    return cardMainFragment;
                 case 1:
                     final MapsFragment mapsFragment = MapsFragment.newInstance(position + 1);
                     sensorService.addLocationSensorListener(mapsFragment);
@@ -117,6 +116,10 @@ public class Main extends Activity {
                 case 2:
                     final GraphFragment graphFragment = GraphFragment.newInstance(position + 1);
                     return graphFragment;
+                case 3:
+                    final MainFragment mainFragment = MainFragment.newInstance(position + 1);
+                    sensorService.registerSensors(mainFragment);
+                    return mainFragment;
                 default:
                     Log.e("Main", "unable to determine fragment to use");
                     throw new FragmentNotFoundRuntimeException("Unbale to determine fragment to use");
@@ -138,6 +141,8 @@ public class Main extends Activity {
                     return getString(R.string.title_section2).toUpperCase(l);
                 case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
+                case 3:
+                    return "Section 4".toUpperCase(l);
             }
             throw new TranslatableNotFoundRuntimeException(String.format("Could not find page title for locale %s", l.getCountry()));
         }

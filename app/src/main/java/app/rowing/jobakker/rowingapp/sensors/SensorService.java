@@ -19,7 +19,7 @@ public interface SensorService {
 
     void addLocationSensorListener(LocationSensor sensor);
 
-    void addSensor(Sensor sensor);
+    void registerSensors(Sensor sensor);
 
     void onResume();
 

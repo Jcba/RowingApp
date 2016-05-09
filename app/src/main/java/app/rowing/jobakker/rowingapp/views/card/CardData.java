@@ -1,21 +1,31 @@
 package app.rowing.jobakker.rowingapp.views.card;
 
-import app.rowing.jobakker.rowingapp.sensors.api.Sensor;
+import app.rowing.jobakker.rowingapp.views.adapter.CardType;
 
 public class CardData {
-    private final Sensor displaySensor;
     private final String headerText;
+    private final CardType cardType;
+    private String dataText;
 
-    public CardData(Sensor displaySensor, String headerText) {
-        this.displaySensor = displaySensor;
+    public CardData(String headerText, String dataText, CardType cardType) {
         this.headerText = headerText;
-    }
-
-    public Sensor getDisplaySensor() {
-        return displaySensor;
+        this.dataText = dataText;
+        this.cardType = cardType;
     }
 
     public String getHeaderText() {
         return headerText;
+    }
+
+    public String getDataText() {
+        return dataText;
+    }
+
+    public void setDataText(String dataText) {
+        this.dataText = dataText;
+    }
+
+    public CardType getCardType() {
+        return cardType;
     }
 }

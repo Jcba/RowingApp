@@ -138,7 +138,7 @@ public class SensorServiceImpl implements SensorEventListener, SensorService, Lo
     }
 
     @Override
-    public void addSensor(app.rowing.jobakker.rowingapp.sensors.api.Sensor sensor) {
+    public void registerSensors(app.rowing.jobakker.rowingapp.sensors.api.Sensor sensor) {
         if(sensor instanceof DistanceSensor) {
             addDistanceSensorListener((DistanceSensor) sensor);
         }
@@ -150,6 +150,9 @@ public class SensorServiceImpl implements SensorEventListener, SensorService, Lo
         }
         if(sensor instanceof StrokerateSensor) {
             addStrokerateListener((StrokerateSensor) sensor);
+        }
+        if(sensor instanceof LocationSensor) {
+            addLocationSensorListener((LocationSensor) sensor);
         }
     }
 

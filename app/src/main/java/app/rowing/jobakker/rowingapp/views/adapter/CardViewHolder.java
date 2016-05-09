@@ -5,9 +5,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import app.rowing.jobakker.rowingapp.R;
-import app.rowing.jobakker.rowingapp.sensors.api.Sensor;
 
-public abstract class CardViewHolder extends RecyclerView.ViewHolder implements Sensor {
+public class CardViewHolder extends RecyclerView.ViewHolder {
     private TextView headerText;
     private TextView dataText;
 

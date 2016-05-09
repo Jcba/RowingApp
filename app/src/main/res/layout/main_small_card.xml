@@ -6,7 +6,8 @@
     android:layout_gravity="center"
     android:layout_width="200dp"
     android:layout_height="200dp"
-    card_view:cardCornerRadius="5dp">
+    card_view:cardCornerRadius="5dp"
+    android:padding="5dp">
 
     <LinearLayout
         android:orientation="vertical"

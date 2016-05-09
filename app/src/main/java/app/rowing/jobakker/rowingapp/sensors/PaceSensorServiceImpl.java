@@ -29,7 +29,14 @@ public class PaceSensorServiceImpl implements PaceSensorService {
         if ((value < previousValue / 2) && (numberOfStrokeSamples > numberOfFilteredPastStrokeSamples / 2)) {
             numberOfFilteredPastStrokeSamples = (numberOfFilteredPastStrokeSamples + numberOfStrokeSamples) / 2;
             numberOfStrokeSamples = 0;
+            lastStroke = currentTimeMillis();
             return getStrokeRateOnStroke();
+        }
+
+        if(lastStroke - currentTimeMillis() > 10000) { //unlikely, reset
+            previousValue = value;
+            numberOfStrokeSamples = 0;
+            lastStroke = currentTimeMillis();
         }
 
         previousValue = value;
